@@ -6,13 +6,16 @@
       <div class="video-container">
         <video id="video" ref="video" autoplay></video>
       </div>
-      <button id="snap" v-on:click="capture()">写</button>
       <canvas id="canvas" ref="canvas" width="150px" height="150px"></canvas>
-      <ul>
+      <ul id="image-list">
         <li v-for="c in captures" :key="c">
           <img v-bind:src="c" />
         </li>
+        <li v-for="i in placehold(captures)" :key="i">
+          <div class="blank"></div>
+        </li>
       </ul>
+      <button id="snap" v-on:click="capture()">写</button>
     </div>
   </div>
 </template>
@@ -40,6 +43,17 @@ export default {
     }
   },
   methods: {
+    placehold(captures) {
+      const c = Object.keys(captures);
+      const n = 6;
+      if (c === undefined) {
+        return n;
+      } else if (c.length >= n) {
+        return 0;
+      } else {
+        return n - c.length;
+      }
+    },
     capture() {
       const videoSize = this.video.videoHeight;
       const imageSize = 150;
@@ -93,25 +107,38 @@ button {
   width: $button-size;
   height: $button-size;
   border-radius: 50%;
-  margin: calc(#{$button-size} / 5);
+  margin: ($button-size / 5);
   font-weight: bold;
 }
-ul {
+#image-list {
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: max-content;
-  grid-gap: calc(#{$video-size} / 10);
-  width: 90vw;
+  grid-gap: $image-gap;
+  width: ($video-size - ($video-size % $image-size));
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
-  margin: 0;
+  margin: 15px 0;
   padding: 0;
   li {
     list-style: none;
-    scroll-snap-align: start;
-    img {
+    scroll-snap-align: center;
+    &:first-child {
+      width: ($image-size + $image-gap / 2);
+      text-align: right;
+    }
+    &:last-child {
+      width: ($image-size + $image-gap / 2);
+      text-align: left;
+    }
+    img,
+    div {
+      display: inline-block;
       width: $image-size;
       height: $image-size;
+    }
+    .blank {
+      background-color: #777;
     }
   }
 }
