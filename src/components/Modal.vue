@@ -1,20 +1,22 @@
 <template>
-  <div class="backdrop">
-    <div class="modal">
-      <header>
-        <slot name="header">
-        <button type="button" class="btn-close" @click="close">x</button>
-        <button type="button" class="btn-close" @click="close">Done</button>
-        </slot>
-      </header>
-      <section>
-        <slot name="body"></slot>
-      </section>
-      <footer>
-        <slot name="footer"></slot>
-      </footer>
+  <transition name="modal-slide">
+    <div class="backdrop" @click="close">
+      <div class="modal" @click.stop="">
+        <header>
+          <slot name="header">
+            <button type="button" class="btn-close" @click="close">x</button>
+            <button type="button" class="btn-close" @click="close">Done</button>
+          </slot>
+        </header>
+        <section>
+          <slot name="body"></slot>
+        </section>
+        <footer>
+          <slot name="footer"></slot>
+        </footer>
+      </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script>
@@ -22,7 +24,10 @@ export default {
   name: "modal",
   methods: {
     close() {
-      this.$emit("close");
+      const isCloseConfirm = confirm("Close without sending?");
+      if (isCloseConfirm) {
+        this.$emit("close");
+      }
     }
   }
 };
@@ -32,18 +37,27 @@ export default {
 .backdrop {
   display: grid;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
   position: fixed;
   top: 0;
-  bottom: 0;
-  right: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, 0.3);
+  height: 100vh;
+  z-index: 100;
 }
 .modal {
   display: grid;
+  width: 100vw;
   background: $white;
-  box-shadow: 2px 2px 20px 1px;
+  box-shadow: 0 5px 20px 1px;
+
+  &-slide-enter,
+  &-slide-leave-to {
+    transform: translateY(100%);
+  }
+  &-slide-enter-active,
+  &-slide-leave-active {
+    transition: transform 0.5s ease;
+  }
 }
 header,
 footer {
@@ -52,6 +66,7 @@ footer {
   padding: 30px;
 }
 section {
-  padding: 20px 10px;
+  width: 100%;
+  padding: 20px 0;
 }
 </style>
