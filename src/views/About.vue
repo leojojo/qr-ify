@@ -1,17 +1,36 @@
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
-    <Camera msg="hogehoge" />
+    <button type="button" class="btn-open" @click="openModal">［ ◉" ］</button>
+    <Modal v-show="isModalVisible" @close="closeModal">
+      <template v-slot:body>
+        <Camera />
+      </template>
+    </Modal>
   </div>
 </template>
 
 <script>
 import Camera from "@/components/Camera.vue";
+import Modal from "@/components/Modal.vue";
 
 export default {
   name: "About",
   components: {
-    Camera
+    Camera,
+    Modal
+  },
+  data() {
+    return {
+      isModalVisible: true
+    };
+  },
+  methods: {
+    openModal() {
+      this.isModalVisible = true;
+    },
+    closeModal() {
+      this.isModalVisible = false;
+    }
   }
 };
 </script>
