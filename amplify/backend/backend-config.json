@@ -1,0 +1,10 @@
+{
+	"auth": {
+		"qrify1215e294": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [],
+			"customAuth": false
+		}
+	}
+}

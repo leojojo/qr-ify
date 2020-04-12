@@ -1,0 +1,20 @@
+{
+    "qrify": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-qrify-qrify-00605-authRole",
+            "UnauthRoleArn": "arn:aws:iam::090696924396:role/amplify-qrify-qrify-00605-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::090696924396:role/amplify-qrify-qrify-00605-authRole",
+            "Region": "ap-northeast-1",
+            "DeploymentBucketName": "amplify-qrify-qrify-00605-deployment",
+            "UnauthRoleName": "amplify-qrify-qrify-00605-unauthRole",
+            "StackName": "amplify-qrify-qrify-00605",
+            "StackId": "arn:aws:cloudformation:ap-northeast-1:090696924396:stack/amplify-qrify-qrify-00605/22408670-7ccf-11ea-84ca-0efa8245db7e",
+            "AmplifyAppId": "d8t29fxe3jwzq"
+        },
+        "categories": {
+            "auth": {
+                "qrify1215e294": {}
+            }
+        }
+    }
+}
