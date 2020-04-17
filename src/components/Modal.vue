@@ -3,16 +3,18 @@
     <div class="backdrop" @click="close">
       <div class="modal" @click.stop="">
         <header>
-          <slot name="header">
+          <slot name="header" ref="header">
             <button type="button" class="btn-close" @click="close">x</button>
-            <button type="button" class="btn-close" @click="close">Done</button>
+            <button type="button" class="btn-close" @click="$emit('submit')">
+              Done
+            </button>
           </slot>
         </header>
         <section>
-          <slot name="body"></slot>
+          <slot name="body" ref="body"></slot>
         </section>
         <footer>
-          <slot name="footer"></slot>
+          <slot name="footer" ref="footer"></slot>
         </footer>
       </div>
     </div>
@@ -28,6 +30,9 @@ export default {
       if (isCloseConfirm) {
         this.$emit("close");
       }
+    },
+    done() {
+      this.$emit("close");
     }
   }
 };

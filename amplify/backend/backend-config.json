@@ -6,5 +6,11 @@
 			"dependsOn": [],
 			"customAuth": false
 		}
+	},
+	"storage": {
+		"qrify": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation"
+		}
 	}
 }

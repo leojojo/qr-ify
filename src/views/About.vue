@@ -1,9 +1,9 @@
 <template>
   <div class="about">
     <button type="button" class="btn-open" @click="openModal">［ ◉" ］</button>
-    <Modal v-show="isModalVisible" @close="closeModal">
+    <Modal v-show="isModalVisible" @close="closeModal" @submit="submitChild">
       <template v-slot:body>
-        <Camera />
+        <Camera ref="camera" />
       </template>
     </Modal>
   </div>
@@ -30,6 +30,9 @@ export default {
     },
     closeModal() {
       this.isModalVisible = false;
+    },
+    submitChild() {
+      this.$refs.camera.uploadPhotos();
     }
   }
 };

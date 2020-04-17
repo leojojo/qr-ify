@@ -7,7 +7,7 @@
         <video id="video" ref="video" autoplay></video>
       </div>
       <canvas id="canvas" ref="canvas" width="150px" height="150px"></canvas>
-      <ul id="image-list">
+      <ul id="image-list" ref="imageList">
         <li v-for="c in captures" :key="c">
           <img v-bind:src="c" />
         </li>
@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import { Storage } from "aws-amplify";
 export default {
   name: "Camera",
   props: {
@@ -72,6 +73,16 @@ export default {
           imageSize
         );
       this.captures.push(this.canvas.toDataURL("image/png"));
+    },
+    uploadPhotos() {
+      this.$refs.imageList.children.forEach((li, i) => {
+        const filename = Date.now() + i;
+        const imageData = li.firstElementChild.src;
+        const access = { level: "protected", contentType: "image/png" };
+        Storage.put(filename, imageData, access)
+          .then(result => console.log(result))
+          .catch(err => console.error("uploadPhotos error: ", err));
+      });
     }
   }
 };
