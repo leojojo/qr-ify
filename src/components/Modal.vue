@@ -26,7 +26,9 @@ export default {
   name: "modal",
   methods: {
     close() {
-      const isCloseConfirm = confirm("Close without sending?");
+      const isCloseConfirm = this.$children[0].unsent
+        ? confirm("Close without sending?")
+        : true;
       if (isCloseConfirm) {
         this.$emit("close");
       }

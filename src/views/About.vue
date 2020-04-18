@@ -30,9 +30,11 @@ export default {
     },
     closeModal() {
       this.isModalVisible = false;
+      this.$refs.camera.clearPhotos();
     },
     submitChild() {
       this.$refs.camera.uploadPhotos();
+      this.isModalVisible = false;
     }
   }
 };

@@ -31,7 +31,8 @@ export default {
     return {
       video: {},
       canvas: {},
-      captures: []
+      captures: [],
+      unsent: false
     };
   },
   mounted() {
@@ -73,6 +74,7 @@ export default {
           imageSize
         );
       this.captures.push(this.canvas.toDataURL("image/png"));
+      this.unsent = true;
     },
     uploadPhotos() {
       this.$refs.imageList.children.forEach((li, i) => {
@@ -80,9 +82,16 @@ export default {
         const imageData = li.firstElementChild.src;
         const access = { level: "protected", contentType: "image/png" };
         Storage.put(filename, imageData, access)
-          .then(result => console.log(result))
+          .then(result => {
+            console.log("key: " + result.key);
+            this.clearPhotos();
+          })
           .catch(err => console.error("uploadPhotos error: ", err));
       });
+    },
+    clearPhotos() {
+      this.captures = [];
+      this.unsent = false;
     }
   }
 };
