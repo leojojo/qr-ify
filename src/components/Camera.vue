@@ -1,22 +1,18 @@
 <template>
-  <div class="hoge">
-    <h2>{{ msg }}</h2>
-    <p>{{ msg }}</p>
-    <div class="container">
-      <div class="video-container">
-        <video id="video" ref="video" autoplay></video>
-      </div>
-      <canvas id="canvas" ref="canvas" width="150px" height="150px"></canvas>
-      <ul id="image-list" ref="imageList">
-        <li v-for="c in captures" :key="c">
-          <img v-bind:src="c" />
-        </li>
-        <li v-for="i in placehold(captures)" :key="i">
-          <div class="blank"></div>
-        </li>
-      </ul>
-      <button id="snap" v-on:click="capture()">写</button>
+  <div class="container">
+    <div class="video-container">
+      <video id="video" ref="video" autoplay></video>
     </div>
+    <canvas id="canvas" ref="canvas" width="150px" height="150px"></canvas>
+    <ul id="image-list" ref="imageList">
+      <li v-for="c in captures" :key="c">
+        <img v-bind:src="c" />
+      </li>
+      <li v-for="i in placehold()" :key="i">
+        <div class="blank"></div>
+      </li>
+    </ul>
+    <button id="snap" v-on:click="capture()">写</button>
   </div>
 </template>
 
@@ -45,8 +41,8 @@ export default {
     }
   },
   methods: {
-    placehold(captures) {
-      const c = Object.keys(captures);
+    placehold() {
+      const c = Object.keys(this.captures);
       const n = 6;
       if (c === undefined) {
         return n;
@@ -77,17 +73,19 @@ export default {
       this.unsent = true;
     },
     uploadPhotos() {
-      this.$refs.imageList.children.forEach((li, i) => {
-        const filename = Date.now() + i;
-        const imageData = li.firstElementChild.src;
-        const access = { level: "protected", contentType: "image/png" };
-        Storage.put(filename, imageData, access)
-          .then(result => {
-            console.log("key: " + result.key);
-            this.clearPhotos();
-          })
-          .catch(err => console.error("uploadPhotos error: ", err));
-      });
+      if (this.captures.length !== 0) {
+        this.$refs.imageList.children.forEach((li, i) => {
+          const filename = Date.now() + i;
+          const imageData = li.firstElementChild.src;
+          const access = { level: "protected", contentType: "image/png" };
+          Storage.put(filename, imageData, access)
+            .then(result => {
+              console.log("key: " + result.key);
+              this.clearPhotos();
+            })
+            .catch(err => console.error("uploadPhotos error: ", err));
+        });
+      }
     },
     clearPhotos() {
       this.captures = [];
@@ -98,11 +96,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.hoge {
-  h2 {
-    color: lighten($primary, 10%);
-  }
-}
 .container {
   display: grid;
   justify-content: center;
