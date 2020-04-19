@@ -13,6 +13,7 @@
       </li>
     </ul>
     <button id="snap" v-on:click="capture()">写</button>
+    <button id="snap" v-on:click="getPhotos()">雲</button>
   </div>
 </template>
 
@@ -28,7 +29,8 @@ export default {
       video: {},
       canvas: {},
       captures: [],
-      unsent: false
+      unsent: false,
+      s3DAta: []
     };
   },
   mounted() {
@@ -90,6 +92,23 @@ export default {
     clearPhotos() {
       this.captures = [];
       this.unsent = false;
+    },
+    getPhotos() {
+      Storage.list("", { level: "protected" })
+        .then(imgs => {
+          imgs.forEach(img => {
+            Storage.get(img.key, { level: "protected", download: true })
+              .then(result => {
+                console.log(result);
+                const link = document.createElement("a");
+                link.href = result.Body;
+                link.download = img.key;
+                link.click();
+              })
+              .catch(err => console.error(err));
+          });
+        })
+        .catch(err => console.error("getPhotos error: ", err));
     }
   }
 };
