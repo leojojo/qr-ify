@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import router from "../router/index.js";
 import Camera from "@/components/Camera.vue";
 import Modal from "@/components/Modal.vue";
 
@@ -33,8 +34,14 @@ export default {
       this.$refs.camera.clearPhotos();
     },
     submitChild() {
-      this.$refs.camera.uploadPhotos();
       this.isModalVisible = false;
+      setTimeout(
+        () =>
+          router.push({ path: "result", query: { value: "hoge" } }, () =>
+            this.$refs.camera.uploadPhotos()
+          ),
+        500
+      );
     }
   }
 };

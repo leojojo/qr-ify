@@ -32,9 +32,6 @@ export default {
       if (isCloseConfirm) {
         this.$emit("close");
       }
-    },
-    done() {
-      this.$emit("close");
     }
   }
 };
