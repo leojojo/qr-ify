@@ -18,6 +18,8 @@
 
 <script>
 import { Storage } from "aws-amplify";
+import { uuid } from "vue-uuid";
+
 export default {
   name: "Camera",
   props: {
@@ -77,7 +79,12 @@ export default {
         this.$refs.imageList.children.forEach((li, i) => {
           const filename = Date.now() + i;
           const imageData = li.firstElementChild.src;
-          const access = { level: "protected", contentType: "image/png" };
+          const boxId = uuid.v4();
+          const access = {
+            level: "protected",
+            contentType: "image/png",
+            tagging: "box=" + boxId
+          };
           Storage.put(filename, imageData, access)
             .then(result => {
               console.log("key: " + result.key);
