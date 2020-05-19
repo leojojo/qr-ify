@@ -17,8 +17,7 @@
 </template>
 
 <script>
-import { Storage } from "aws-amplify";
-import { uuid } from "vue-uuid";
+import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
   name: "Camera",
@@ -28,10 +27,11 @@ export default {
   data() {
     return {
       video: {},
-      canvas: {},
-      captures: [],
-      unsent: false
+      canvas: {}
     };
+  },
+  computed: {
+    ...mapState(["captures"])
   },
   mounted() {
     this.video = this.$refs.video;
@@ -43,6 +43,8 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(["pushToCaptures", "clearCaptures"]),
+    ...mapActions(["uploadPhotos"]),
     placehold() {
       const c = Object.keys(this.captures);
       const n = 6;
@@ -71,32 +73,7 @@ export default {
           imageSize,
           imageSize
         );
-      this.captures.push(this.canvas.toDataURL("image/png"));
-      this.unsent = true;
-    },
-    uploadPhotos() {
-      if (this.captures.length !== 0) {
-        this.$refs.imageList.children.forEach((li, i) => {
-          const filename = Date.now() + i;
-          const imageData = li.firstElementChild.src;
-          const boxId = uuid.v4();
-          const access = {
-            level: "protected",
-            contentType: "image/png",
-            tagging: "box=" + boxId
-          };
-          Storage.put(filename, imageData, access)
-            .then(result => {
-              console.log("key: " + result.key);
-              this.clearPhotos();
-            })
-            .catch(err => console.error("uploadPhotos error: ", err));
-        });
-      }
-    },
-    clearPhotos() {
-      this.captures = [];
-      this.unsent = false;
+      this.pushToCaptures(this.canvas.toDataURL("image/png"));
     }
   }
 };

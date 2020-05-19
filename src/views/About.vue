@@ -1,7 +1,8 @@
 <template>
   <div class="about">
     <button type="button" class="btn-open" @click="openModal">［ ◉" ］</button>
-    <Modal v-show="isModalVisible" @close="closeModal" @submit="submitChild">
+    <button type="button" class="btn-open" @click="submit">Submit</button>
+    <Modal v-show="isModalVisible" @close="closeModal" @done="doneModal">
       <template v-slot:body>
         <Camera ref="camera" />
       </template>
@@ -10,9 +11,9 @@
 </template>
 
 <script>
-import router from "../router/index.js";
 import Camera from "@/components/Camera.vue";
 import Modal from "@/components/Modal.vue";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
   name: "About",
@@ -25,23 +26,25 @@ export default {
       isModalVisible: true
     };
   },
+  computed: {
+    ...mapGetters(["getCaptures"])
+  },
   methods: {
+    ...mapMutations(["clearCaptures"]),
+    ...mapActions(["uploadPhotos"]),
     openModal() {
       this.isModalVisible = true;
     },
     closeModal() {
       this.isModalVisible = false;
-      this.$refs.camera.clearPhotos();
+      this.clearCaptures();
     },
-    submitChild() {
+    doneModal() {
       this.isModalVisible = false;
-      setTimeout(
-        () =>
-          router.push({ path: "result", query: { value: "hoge" } }, () =>
-            this.$refs.camera.uploadPhotos()
-          ),
-        500
-      );
+    },
+    submit() {
+      this.uploadPhotos(this.getCaptures);
+      this.clearCaptures();
     }
   }
 };
