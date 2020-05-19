@@ -1,26 +1,24 @@
 <template>
-  <div class="hoge">
-    <h2>{{ msg }}</h2>
-    <p>{{ msg }}</p>
-    <div class="container">
-      <div class="video-container">
-        <video id="video" ref="video" autoplay></video>
-      </div>
-      <canvas id="canvas" ref="canvas" width="150px" height="150px"></canvas>
-      <ul id="image-list">
-        <li v-for="c in captures" :key="c">
-          <img v-bind:src="c" />
-        </li>
-        <li v-for="i in placehold(captures)" :key="i">
-          <div class="blank"></div>
-        </li>
-      </ul>
-      <button id="snap" v-on:click="capture()">写</button>
+  <div class="container">
+    <div class="video-container">
+      <video id="video" ref="video" autoplay></video>
     </div>
+    <canvas id="canvas" ref="canvas" width="150px" height="150px"></canvas>
+    <ul id="image-list" ref="imageList">
+      <li v-for="c in captures" :key="c">
+        <img v-bind:src="c" />
+      </li>
+      <li v-for="i in placehold()" :key="i">
+        <div class="blank"></div>
+      </li>
+    </ul>
+    <button id="snap" v-on:click="capture()">写</button>
   </div>
 </template>
 
 <script>
+import { mapState, mapMutations, mapActions } from "vuex";
+
 export default {
   name: "Camera",
   props: {
@@ -29,9 +27,11 @@ export default {
   data() {
     return {
       video: {},
-      canvas: {},
-      captures: []
+      canvas: {}
     };
+  },
+  computed: {
+    ...mapState(["captures"])
   },
   mounted() {
     this.video = this.$refs.video;
@@ -43,8 +43,10 @@ export default {
     }
   },
   methods: {
-    placehold(captures) {
-      const c = Object.keys(captures);
+    ...mapMutations(["pushToCaptures", "clearCaptures"]),
+    ...mapActions(["uploadPhotos"]),
+    placehold() {
+      const c = Object.keys(this.captures);
       const n = 6;
       if (c === undefined) {
         return n;
@@ -71,18 +73,13 @@ export default {
           imageSize,
           imageSize
         );
-      this.captures.push(this.canvas.toDataURL("image/png"));
+      this.pushToCaptures(this.canvas.toDataURL("image/png"));
     }
   }
 };
 </script>
 
 <style scoped lang="scss">
-.hoge {
-  h2 {
-    color: lighten($primary, 10%);
-  }
-}
 .container {
   display: grid;
   justify-content: center;
