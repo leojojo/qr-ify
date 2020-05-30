@@ -5,10 +5,14 @@ h1 {
 .btn-open {
   display: inline-flex;
   justify-content: center;
-  width: 65px;
-  height: 65px;
+  align-items: center;
+  width: 25vmin;
+  height: 25vmin;
+  margin: 15px;
+  padding: 15px;
   white-space: nowrap;
   font-size: 18px;
+  text-transform: uppercase;
 }
 
 .btn-close {
