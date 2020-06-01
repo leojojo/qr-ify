@@ -12,10 +12,10 @@ export default new Vuex.Store({
     user: null,
     captures: [],
     unsent: false,
-    boxName: ""
+    boxes: []
   },
   getters: {
-    getCaptures: state => state.captures
+    getBoxes: state => state.boxes.map(box => JSON.parse(box))
   },
   mutations: {
     setUser(state, user) {
@@ -28,14 +28,25 @@ export default new Vuex.Store({
     clearCaptures(state) {
       state.captures = [];
       state.unsent = false;
+    },
+    setBox(state, { boxId, boxName, options }) {
+      const box = {
+        id: boxId,
+        name: boxName,
+        options: options
+      };
+      state.boxes.push(JSON.stringify(box));
+      localStorage.setItem("box", state.boxes);
     }
   },
   actions: {
-    uploadPhotos(state, captures) {
+    uploadPhotos(context, { captures, boxName, options }) {
       if (captures && captures.length !== 0) {
+        const boxId = uuid.v4();
+        context.commit("setBox", { boxId, boxName, options });
+
         captures.forEach(imageData => {
           const fileName = Date.now();
-          const boxId = uuid.v4();
           const access = {
             level: "protected",
             contentType: "image/png",

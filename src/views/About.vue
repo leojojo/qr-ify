@@ -13,7 +13,7 @@
 <script>
 import Camera from "@/components/Camera.vue";
 import Modal from "@/components/Modal.vue";
-import { mapGetters, mapMutations, mapActions } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
   name: "About",
@@ -27,7 +27,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getCaptures"])
+    ...mapState(["captures"])
   },
   methods: {
     ...mapMutations(["clearCaptures"]),
@@ -43,7 +43,10 @@ export default {
       this.isModalVisible = false;
     },
     submit() {
-      this.uploadPhotos(this.getCaptures);
+      const captures = this.captures;
+      const boxName = "hogeBox";
+      const options = {};
+      this.uploadPhotos({ captures, boxName, options });
       this.clearCaptures();
     }
   }
