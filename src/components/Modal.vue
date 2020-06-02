@@ -25,13 +25,12 @@ import { mapState } from "vuex";
 export default {
   name: "Modal",
   computed: {
-    ...mapState(["unsent"])
+    ...mapState(["captures"])
   },
   methods: {
     close() {
-      const isCloseConfirm = this.unsent
-        ? confirm("Close without sending?")
-        : true;
+      const isCloseConfirm =
+        this.captures.length !== 0 ? confirm("Close without sending?") : true;
       if (isCloseConfirm) {
         this.$emit("close");
       }

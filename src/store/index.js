@@ -11,11 +11,10 @@ export default new Vuex.Store({
   state: {
     user: null,
     captures: [],
-    unsent: false,
     boxes: []
   },
   getters: {
-    getBoxes: state => state.boxes.map(box => JSON.parse(box))
+    getBoxes: state => state.boxes
   },
   mutations: {
     setUser(state, user) {
@@ -23,30 +22,37 @@ export default new Vuex.Store({
     },
     pushToCaptures(state, dataUrl) {
       state.captures.push(dataUrl);
-      state.unsent = true;
     },
     clearCaptures(state) {
       state.captures = [];
-      state.unsent = false;
     },
-    setBox(state, { boxId, boxName, options }) {
+    setBox(state, { boxId, boxName, createdAt, options }) {
       const box = {
         id: boxId,
         name: boxName,
+        createdAt: createdAt,
         options: options
       };
-      state.boxes.push(JSON.stringify(box));
-      localStorage.setItem("box", state.boxes);
+      state.boxes.push(box);
+      localStorage.setItem("boxes", JSON.stringify(state.boxes));
+    },
+    setBoxes(state, boxes) {
+      state.boxes = boxes;
     }
   },
   actions: {
+    initBoxes(state) {
+      const boxes = JSON.parse(localStorage.getItem("boxes")) || [];
+      state.commit("setBoxes", boxes);
+    },
     uploadPhotos(context, { captures, boxName, options }) {
       if (captures && captures.length !== 0) {
         const boxId = uuid.v4();
-        context.commit("setBox", { boxId, boxName, options });
+        const createdAt = new Date();
+        context.commit("setBox", { boxId, boxName, createdAt, options });
 
         captures.forEach(imageData => {
-          const fileName = Date.now();
+          const fileName = createdAt.now;
           const access = {
             level: "protected",
             contentType: "image/png",

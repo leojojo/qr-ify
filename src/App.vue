@@ -22,6 +22,10 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: $primary;
+
+  max-width: 1024px;
+  margin: 30px;
+  overflow-x: hidden;
 }
 
 #nav {
