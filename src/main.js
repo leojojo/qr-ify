@@ -3,6 +3,7 @@ import App from "./App.vue";
 import "./registerServiceWorker";
 import router from "./router/index.js";
 import store from "./store/index.js";
+import helpers from "./helpers/index.js";
 
 // Amplify
 import Amplify, * as AmplifyModules from "aws-amplify";
@@ -19,5 +20,6 @@ Vue.config.productionTip = false;
 new Vue({
   router,
   store,
+  helpers,
   render: h => h(App)
 }).$mount("#app");

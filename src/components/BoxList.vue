@@ -3,7 +3,7 @@
     <article v-for="box in boxes" :key="box.id" class="box-item">
       <p>{{ box.name }}</p>
       <p>
-        <time :datetime="box.createdAt">{{ box.createdAt }}</time>
+        <time :datetime="box.createdAt">{{ box.createdAt | MDhm }}</time>
       </p>
     </article>
   </section>
